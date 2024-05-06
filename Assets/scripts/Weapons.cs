@@ -15,28 +15,41 @@ public class Weapons : MonoBehaviour
     private float attackForce;*/
     [SerializeField]
     private int index;
+    [SerializeField]
+    private bool isFound = false;
     /*[SerializeField]
     private bool Catch = false;*/
 
-   /* void Start()
+    /* void Start()
+     {
+         GameObject playerObj = GameObject.FindWithTag("Player");
+         player = playerObj.GetComponent<PlayerController>();
+
+     }
+
+
+     private void WeaponAttack()
+     {
+
+     }
+
+     public float ShowAttackForce()
+     {
+         attackForce = player.AttackForce() + weaponForce;
+         return attackForce;
+     }*/
+    private void OnTriggerEnter(Collider collision)
     {
-        GameObject playerObj = GameObject.FindWithTag("Player");
-        player = playerObj.GetComponent<PlayerController>();
-       
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            isFound = true;
+        }
     }
-    
 
-    private void WeaponAttack()
+    public bool ShowIsFound()
     {
-
+        return isFound;
     }
-
-    public float ShowAttackForce()
-    {
-        attackForce = player.AttackForce() + weaponForce;
-        return attackForce;
-    }*/
-
     public int ShowIndex()
     {
         return index;

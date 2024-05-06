@@ -8,6 +8,7 @@ TagManager:
   - Trigger Zone
   - Weapon
   - melee attack
+  - Damage
   layers:
   - Default
   - TransparentFX

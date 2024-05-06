@@ -5,6 +5,8 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
@@ -23,9 +25,15 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private int i = 0;
     [SerializeField]
+    private float hp= 500f;
+    [SerializeField]
     private GameObject Attack;
     [SerializeField]
+    private GameObject weaponModelObj;
+    [SerializeField]
     private GameObject[] tmpWeapon;
+    [SerializeField]
+    private Slider playerSliderHp;
 
     private float movementX;
     private float movementZ;   
@@ -47,11 +55,17 @@ public class PlayerController : MonoBehaviour
         {
             kd = 0;
         }
-        if (kd>0 && kd <=1)
+        if (kd>0 && kd <=1.5)
         {
             Attack.SetActive(false);
         }
 
+        playerSliderHp.value = hp;
+        if(hp <= 0)
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            
+        }
 
     }
 
@@ -66,34 +80,48 @@ public class PlayerController : MonoBehaviour
     {
         //weapons.AttackStarted();
 
-        if(kd == 0 || kd >1)
+        if(kd == 0 || kd ==2)
         {
             print("ok");
             Attack.SetActive(true);
             kd = 2;
+            /*GameObject enemy = GameObject.FindGameObjectWithTag("Enemy");
+            enemy.GetComponent<EnemyController>().Jump();*/
         }
-      
+        
+        //Мы вызвали тут метод отбрасывания, чтобы проверить его работу
+        //MoveTowards действительно мешает увидеть эффект отбрасывания
+        
     }
 
-   /* private void OnTriggerEnter(Collider collision)
+    private void OnTriggerEnter(Collider collision)
     {
         if (collision.gameObject.CompareTag("Weapon"))
         {
+            
             tmpWeapon[i].SetActive(false);
             weapons = collision.gameObject.GetComponent<Weapons>();
             i = weapons.ShowIndex();
-            tmpWeapon[i].SetActive(true);
-            //playerweapon = gameObject.GetComponent<WeaponController>();
-            attackForce = force + playerweapon[i].ShowWeaponForce();
-            print(attackForce);
-
+            if(weaponModelObj.transform.position.z - transform.position.z <= 2 && weaponModelObj.transform.position.z - transform.position.z >= -2)
+            {
+                if (transform.position.x - weaponModelObj.transform.position.x <= 2 && transform.position.x - weaponModelObj.transform.position.x >= -2)
+                {
+                    tmpWeapon[i].SetActive(true);
+                    //playerweapon = gameObject.GetComponent<WeaponController>();
+                    attackForce = force + playerweapon[i].ShowWeaponForce();
+                    weaponModelObj.SetActive(false);
+                    print(attackForce);
+                }
+            }           
         }
-    }*/
+        if (collision.gameObject.CompareTag("Damage"))
+        {
+            hp -= 25f;
+        }
+    }
 
     public float AttackForce()
     {
         return attackForce;
     }
-
-
 }
