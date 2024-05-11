@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -35,14 +36,20 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private Slider playerSliderHp;
 
+
+    private Transform playerTransform;
     private float movementX;
     private float movementZ;   
     private Rigidbody rb;
     private bool isAttack = false;
+    [SerializeField]
+    private bool isdialog = false;
+    private AudioManager audioManager;
 
     void Start()
     {
-        rb = GetComponent<Rigidbody>();       
+        rb = GetComponent<Rigidbody>();
+        audioManager = GameObject.FindGameObjectWithTag("audio").GetComponent<AudioManager>();   
     }
 
     // Update is called once per frame
@@ -63,10 +70,24 @@ public class PlayerController : MonoBehaviour
         playerSliderHp.value = hp;
         if(hp <= 0)
         {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-            
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);            
         }
 
+        playerTransform = transform;
+        if(transform != playerTransform)
+        {
+            audioManager.Play("walk"); 
+        }
+        else
+        {
+            audioManager.Stop("walk");
+        }
+    }
+
+    private void MovementSound()
+    {
+        //if(transform.h)
+        //audioManager.Stop("walk");
     }
 
     public void OnMove(InputValue inputValue)
@@ -74,6 +95,7 @@ public class PlayerController : MonoBehaviour
         Vector2 movementValue = inputValue.Get<Vector2>();
         movementX = movementValue.x;
         movementZ = movementValue.y;
+        //audioManager.Play("walk");
     }
 
     public void OnFire()
@@ -123,5 +145,22 @@ public class PlayerController : MonoBehaviour
     public float AttackForce()
     {
         return attackForce;
+    }
+
+    private void OnDialog()
+    {    
+      print("dialog");
+      isdialog = true;
+     
+    }
+
+    public bool ShowDialog()
+    {
+        return isdialog;
+    }
+
+    public void DialogIsFinished()
+    {
+        isdialog = false;
     }
 }

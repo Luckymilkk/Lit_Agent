@@ -9,6 +9,7 @@ TagManager:
   - Weapon
   - melee attack
   - Damage
+  - audio
   layers:
   - Default
   - TransparentFX
